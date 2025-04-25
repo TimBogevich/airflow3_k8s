@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: 'https://your-git-repo.com/airflow-argocd.git'
+    repoURL: 'https://github.com/TimBogevich/airflow3_k8s.git'
     path: '.'  # путь к Helm-чарту или манифестам
     targetRevision: HEAD
     helm:
