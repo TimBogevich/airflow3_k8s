@@ -67,7 +67,8 @@ serviceAccount:
   name: airflow
 
 migrateDatabaseJob:
-  enabled: true
+    jobAnnotations:
+        "argocd.argoproj.io/hook": Sync
 
 # RBAC
 rbac:
