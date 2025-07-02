@@ -1,7 +1,93 @@
-apiServer:
-  waitForMigrations:
-    enabled: false
+# Airflow configuration
+airflow:
+  image:
+    repository: apache/airflow
+    tag: "3.0.2-python3.11"
+    pullPolicy: IfNotPresent
 
+  executor: "CeleryExecutor"
+
+  fernetKey: "O10o4v0Vrg7z5uLiMsDSgXGDkTOab4xZax-pAsz6REs="
+
+  postgresql:
+    enabled: true
+    auth:
+      username: airflow
+      password: airflow
+      database: airflow
+    primary:
+      persistence:
+        enabled: true
+        size: 8Gi
+
+  redis:
+    enabled: true
+
+  env:
+    - name: AIRFLOW__CORE__LOAD_EXAMPLES
+      value: "False"
+    - name: AIRFLOW__WEBSERVER__EXPOSE_CONFIG
+      value: "True"
+
+  dags:
+    persistence:
+      enabled: true
+      size: 1Gi
+    gitSync:
+      enabled: false
+
+  logs:
+    persistence:
+      enabled: true
+      size: 8Gi
+
+# Airflow config overrides
+config:
+  core:
+    dags_are_paused_at_creation: true
+    load_examples: true
+    max_active_runs_per_dag: 16
+    max_active_tasks_per_dag: 16
+
+  webserver:
+    expose_config: true
+    authenticate: false
+    rbac: false
+
+  kubernetes:
+    namespace: airflow
+    worker_container_repository: apache/airflow
+    worker_container_tag: "3.0.2"
+    delete_worker_pods: true
+    delete_worker_pods_on_failure: false
+
+# Service account
+serviceAccount:
+  create: true
+  name: airflow
+
+createUserJob:
+  useHelmHooks: false
+  applyCustomEnv: false
+  
 migrateDatabaseJob:
-    jobAnnotations:
-        "argocd.argoproj.io/hook": Sync
+  useHelmHooks: false
+  applyCustomEnv: false
+  jobAnnotations: 
+    "argocd.argoproj.io/hook": Sync
+
+# RBAC
+rbac:
+  create: true
+
+# Ingress (enabled)
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: nginx
+  hosts:
+    - host: airflow.local
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
