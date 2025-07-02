@@ -8,7 +8,10 @@ spec:
   source:
     repoURL: https://github.com/TimBogevich/airflow3_k8s.git
     targetRevision: HEAD
-    path: manifests
+    path: .
+    helm:
+      valueFiles:
+        - values.yaml            # relative to path
   destination:
     server: https://kubernetes.default.svc
     namespace: airflow

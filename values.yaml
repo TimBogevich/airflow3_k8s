@@ -29,6 +29,7 @@ airflow:
     - name: AIRFLOW__WEBSERVER__EXPOSE_CONFIG
       value: "True"
 
+
   dags:
     persistence:
       enabled: true
@@ -69,12 +70,10 @@ serviceAccount:
 createUserJob:
   useHelmHooks: false
   applyCustomEnv: false
-  
+
 migrateDatabaseJob:
   useHelmHooks: false
   applyCustomEnv: false
-  jobAnnotations: 
-    "argocd.argoproj.io/hook": Sync
 
 # RBAC
 rbac:
