@@ -66,6 +66,9 @@ serviceAccount:
   create: true
   name: airflow
 
+migrateDatabaseJob:
+  enabled: true
+
 # RBAC
 rbac:
   create: true
