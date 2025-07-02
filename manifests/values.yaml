@@ -1,4 +1,5 @@
 # Default airflow tag to deploy
+defaultAirflowRepository: apache/airflow
 defaultAirflowTag: "2.10.4"
 
 # Default airflow digest. If specified, it takes precedence over tag
