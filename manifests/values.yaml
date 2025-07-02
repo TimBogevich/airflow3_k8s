@@ -7,6 +7,13 @@ defaultAirflowDigest: ~
 # Airflow version (Used to make some decisions based on Airflow Version being deployed)
 airflowVersion: "2.10.4"
 
+# Images
+images:
+  airflow:
+    repository: ~
+    tag: 2.10.4
+    # Specifying digest takes precedence over tag.
+
 airflow:
   image:
     repository: apache/airflow
