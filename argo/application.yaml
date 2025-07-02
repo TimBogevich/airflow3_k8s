@@ -1,20 +1,20 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: airflow7
+  name: airflow8
   namespace: argocd
 spec:
   destination:
     server: https://kubernetes.default.svc
-    namespace: airflow7
+    namespace: airflow8
   project: default
   source:
     repoURL: https://github.com/TimBogevich/airflow3_k8s.git
     targetRevision: HEAD
-    path: '.'
+    path: chart
     helm:
       valueFiles:
-        - values.yaml
+        - $values/chart/demo-values.yaml
   syncPolicy:
     automated:
       prune: true
