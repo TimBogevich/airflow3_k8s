@@ -14,7 +14,7 @@ spec:
         - values.yaml            # relative to path
   destination:
     server: https://kubernetes.default.svc
-    namespace: airflow
+    namespace: airflow2
   syncPolicy:
     automated:
       prune: true
