@@ -1,47 +1,104 @@
-# Airflow configuration
-defaultAirflowRepository: apache/airflow
-defaultAirflowTag: "3.0.2-python3.11"
-airflowVersion: "3.0.2"
+# values.yaml for Apache Airflow Helm chart in Argo CD
 
+airflow:
+  image:
+    repository: apache/airflow
+    tag: 2.9.0
+    pullPolicy: IfNotPresent
 
-# Service account
-serviceAccount:
-  create: true
-  name: airflow
+  config:
+    AIRFLOW__CORE__EXECUTOR: CeleryExecutor
+    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgresql:5432/airflow
+    AIRFLOW__CORE__FERNET_KEY: ''
+    AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
+    AIRFLOW__API__AUTH_BACKEND: 'airflow.api.auth.backend.basic_auth'
+
+  users:
+    - username: admin
+      password: admin
+      role: Admin
+      email: admin@example.com
+      firstName: Admin
+      lastName: User
+
+  extraEnv:
+    - name: AIRFLOW__CORE__LOAD_EXAMPLES
+      value: "False"
+
+  webserver:
+    defaultUser:
+      enabled: true
+      email: admin@example.com
+      username: admin
+      password: admin
+      firstName: Admin
+      lastName: User
+    service:
+      type: ClusterIP
+      port: 8080
+
+  scheduler:
+    replicas: 1
+
+  workers:
+    enabled: true
+    replicas: 2
+
+  triggerer:
+    enabled: true
+
+  logs:
+    persistence:
+      enabled: true
+      size: 1Gi
+      storageClassName: standard
+
+postgresql:
+  enabled: true
+  auth:
+    username: airflow
+    password: airflow
+    database: airflow
+  primary:
+    persistence:
+      enabled: true
+      size: 1Gi
+      storageClass: standard
+
+flower:
+  enabled: true
+  service:
+    type: ClusterIP
+
+redis:
+  enabled: true
+
+dags:
+  persistence:
+    enabled: true
+    existingClaim: airflow-dags-pvc
+    subPath: dags
 
 createUserJob:
   useHelmHooks: false
   applyCustomEnv: false
 
 migrateDatabaseJob:
-  enabled: true
-  # Limit the lifetime of the job object after it finished execution.
-  ttlSecondsAfterFinished: 300
-  # Command to use when running the migrate database job (templated).
-  command: ~
-  # Args to use when running the migrate database job (templated).
-  args:
-    - "bash"
-    - "-c"
-    - >-
-      exec \
+  useHelmHooks: false
+  applyCustomEnv: false
+  jobAnnotations:
+    "argocd.argoproj.io/hook": Sync
 
-      airflow {{ semverCompare ">=2.7.0" .Values.airflowVersion
-      | ternary "db migrate" (semverCompare ">=2.0.0" .Values.airflowVersion
-      | ternary "db upgrade" "upgradedb") }}
-
-# RBAC
-rbac:
-  create: true
-
-# Ingress (enabled)
+# Airflow ingress settings
 ingress:
   enabled: true
-  annotations:
-    kubernetes.io/ingress.class: nginx
-  hosts:
-    - host: airflow.local
-      paths:
-        - path: /
-          pathType: Prefix
-  tls: []
+  web:
+    annotations:
+      kubernetes.io/ingress.class: nginx
+    hosts:
+      - host: airflow.example.com
+        paths:
+          - path: /
+            pathType: Prefix
+    tls: [] # Add TLS configuration if needed
+
