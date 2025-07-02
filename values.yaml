@@ -10,7 +10,7 @@ airflow:
   executor: "KubernetesExecutor"
 
   # Fernet key for encryption (static key)
-  fernetKey: "Fernet-Key-Goes-Here-32-Character-Base64-Encoded-String="
+  fernetKey: "O10o4v0Vrg7z5uLiMsDSgXGDkTOab4xZax-pAsz6REs="
   
   # Web server configuration
   webserver:
