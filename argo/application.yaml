@@ -1,12 +1,12 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: airflow6
+  name: airflow7
   namespace: argocd
 spec:
   destination:
     server: https://kubernetes.default.svc
-    namespace: airflow6
+    namespace: airflow7
   project: default
   source:
     repoURL: https://github.com/TimBogevich/airflow3_k8s.git
