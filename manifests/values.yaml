@@ -1,5 +1,3 @@
-# values.yaml for Apache Airflow Helm chart in Argo CD
-
 airflow:
   image:
     repository: apache/airflow
@@ -7,11 +5,16 @@ airflow:
     pullPolicy: IfNotPresent
 
   config:
-    AIRFLOW__CORE__EXECUTOR: CeleryExecutor
-    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgresql:5432/airflow
-    AIRFLOW__CORE__FERNET_KEY: ''
-    AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
-    AIRFLOW__API__AUTH_BACKEND: 'airflow.api.auth.backend.basic_auth'
+    AIRFLOW__CORE__EXECUTOR:
+      value: CeleryExecutor
+    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN:
+      value: postgresql+psycopg2://airflow:airflow@postgresql:5432/airflow
+    AIRFLOW__CORE__FERNET_KEY:
+      value: ""
+    AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION:
+      value: "true"
+    AIRFLOW__API__AUTH_BACKEND:
+      value: airflow.api.auth.backend.basic_auth
 
   users:
     - username: admin
@@ -21,9 +24,7 @@ airflow:
       firstName: Admin
       lastName: User
 
-  extraEnv:
-    - name: AIRFLOW__CORE__LOAD_EXAMPLES
-      value: "False"
+  extraEnv: ""  # Must be null or string if not using complex env logic
 
   webserver:
     defaultUser:
@@ -34,18 +35,16 @@ airflow:
       firstName: Admin
       lastName: User
     service:
-      type: ClusterIP
-      port: 8080
+      type: ClusterIP  # Remove `port`, it's handled by chart
 
   scheduler:
     replicas: 1
 
   workers:
-    enabled: true
-    replicas: 2
+    replicas: 2  # Do not set `enabled`
 
   triggerer:
-    enabled: true
+    replicas: 1
 
   logs:
     persistence:
@@ -89,7 +88,7 @@ migrateDatabaseJob:
   jobAnnotations:
     "argocd.argoproj.io/hook": Sync
 
-# Airflow ingress settings
+
 ingress:
   enabled: true
   web:
@@ -100,5 +99,4 @@ ingress:
         paths:
           - path: /
             pathType: Prefix
-    tls: [] # Add TLS configuration if needed
-
+    tls: false  # or provide array of objects, not a map
