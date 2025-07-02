@@ -1,4 +1,3 @@
-
-migrateDatabaseJob:
-  jobAnnotations:
-      "argocd.argoproj.io/hook": Sync
+apiServer:
+  waitForMigrations:
+    enabled: false
