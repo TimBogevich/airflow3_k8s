@@ -14,7 +14,7 @@ spec:
     path: manifests
     helm:
       valueFiles:
-        - ./values2.yaml            # relative to path
+        - ./values.yaml            # relative to path
   syncPolicy:
     automated:
       prune: true
