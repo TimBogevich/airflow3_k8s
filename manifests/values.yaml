@@ -1,18 +1,14 @@
 # Airflow configuration
 airflow:
-  # Airflow version
   image:
     repository: apache/airflow
     tag: "3.0.2-python3.11"
     pullPolicy: IfNotPresent
 
-  # Executor configuration
   executor: "CeleryExecutor"
 
-  # Fernet key for encryption (static key)
   fernetKey: "O10o4v0Vrg7z5uLiMsDSgXGDkTOab4xZax-pAsz6REs="
-  
-  # Database configuration
+
   postgresql:
     enabled: true
     auth:
@@ -24,49 +20,44 @@ airflow:
         enabled: true
         size: 8Gi
 
-  # Redis configuration (not needed for KubernetesExecutor)
   redis:
-    enabled: false
+    enabled: true
 
-  # Environment variables
   env:
     - name: AIRFLOW__CORE__LOAD_EXAMPLES
       value: "False"
     - name: AIRFLOW__WEBSERVER__EXPOSE_CONFIG
       value: "True"
-    - name: AIRFLOW__CORE__FERNET_KEY
-      value: "Fernet-Key-Goes-Here-32-Character-Base64-Encoded-String="
 
-  # DAGs configuration
   dags:
     persistence:
       enabled: true
       size: 1Gi
+      accessModes:
+        - ReadWriteOnce
     gitSync:
       enabled: false
 
-  # Logs configuration
   logs:
     persistence:
       enabled: true
       size: 8Gi
+      accessModes:
+        - ReadWriteOnce
 
-# Additional configuration
+# Airflow config overrides
 config:
-  # Core settings
   core:
     dags_are_paused_at_creation: true
     load_examples: true
     max_active_runs_per_dag: 16
     max_active_tasks_per_dag: 16
-    
-  # Webserver settings
+
   webserver:
     expose_config: true
     authenticate: false
     rbac: false
 
-  # Kubernetes executor settings
   kubernetes:
     namespace: airflow
     worker_container_repository: apache/airflow
@@ -83,14 +74,14 @@ serviceAccount:
 rbac:
   create: true
 
-# Ingress (optional)
+# Ingress (enabled)
 ingress:
-  enabled: false
-  # annotations:
-  #   kubernetes.io/ingress.class: nginx
-  # hosts:
-  #   - host: airflow.example.com
-  #     paths:
-  #       - path: /
-  #         pathType: Prefix
-  # tls: []
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: nginx
+  hosts:
+    - host: airflow.local
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
