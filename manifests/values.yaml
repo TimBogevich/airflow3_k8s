@@ -1,5 +1,5 @@
 # Default airflow tag to deploy
-defaultAirflowTag: "3.0.1"
+defaultAirflowTag1: "3.0.1"
 fernetKey: 'fsdfsfsf='
 
 airflow:
