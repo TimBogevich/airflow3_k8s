@@ -33,8 +33,6 @@ airflow:
     persistence:
       enabled: true
       size: 1Gi
-      accessModes:
-        - ReadWriteOnce
     gitSync:
       enabled: false
 
@@ -42,8 +40,6 @@ airflow:
     persistence:
       enabled: true
       size: 8Gi
-      accessModes:
-        - ReadWriteOnce
 
 # Airflow config overrides
 config:
