@@ -1,25 +1,12 @@
 # Default airflow tag to deploy
-defaultAirflowRepository: apache/airflow
-defaultAirflowTag: "2.10.4"
-
-# Default airflow digest. If specified, it takes precedence over tag
-defaultAirflowDigest: ~
-
-# Airflow version (Used to make some decisions based on Airflow Version being deployed)
-airflowVersion: "2.10.4"
-
-# Images
-images:
-  airflow:
-    repository: ~
-    tag: 2.10.4
-    # Specifying digest takes precedence over tag.
+defaultAirflowTag: "3.0.1"
+fernetKey: 'fsdfsfsf='
 
 airflow:
   image:
     repository: apache/airflow
-    tag: 2.10.4
-    pullPolicy: IfNotPresent
+    tag: 3.0.1
+    pullPolicy: Always
 
   config:
     AIRFLOW__CORE__EXECUTOR:
